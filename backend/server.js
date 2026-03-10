@@ -13,7 +13,7 @@ app.use(
     origin: [
       'http://localhost:3000',
       'http://localhost:5173',
-      'https://your-frontend-name.vercel.app'
+      'https://admin-dashboard-aaq4.vercel.app'
     ],
     credentials: true
   })

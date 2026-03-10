@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🎓 College Admin Dashboard
 ### Role-Based Access Control System | React + MUI + Node.js + MongoDB
 
@@ -195,3 +196,7 @@ npm install @fontsource/nunito  # if needed in frontend
 ---
 
 *Built as a college project demonstrating MERN stack with Role-Based Access Control (RBAC)*
+=======
+# Admin_Dashboard
+It is college project
+>>>>>>> babacb9f3125872883796b522c9462039043f85e
