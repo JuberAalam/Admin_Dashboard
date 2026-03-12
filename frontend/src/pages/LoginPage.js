@@ -65,7 +65,7 @@ export default function LoginPage() {
           <Box textAlign="center" mb={3}>
             <School sx={{ fontSize: 45 }} color="primary" />
             <Typography variant="h5" fontWeight={700}>
-              College Admin System
+              Admin Dashboard Login
             </Typography>
           </Box>
 
