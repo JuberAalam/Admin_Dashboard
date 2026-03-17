@@ -2,16 +2,20 @@ import React, { useState } from 'react';
 import {
   Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText,
   Toolbar, AppBar, IconButton, Typography, Avatar, Menu, MenuItem,
-  Divider, Chip, Tooltip, Badge, useTheme, useMediaQuery,
+  Divider, Chip, Tooltip, useTheme, useMediaQuery
 } from '@mui/material';
+
 import {
   Menu as MenuIcon, Dashboard, People, FolderOpen, Campaign,
-  Settings, Logout, Person, School, ChevronLeft,
-  AdminPanelSettings, SupervisorAccount, AccountCircle,
-  NotificationsNone,
+  Settings, Logout, Person, School,
+  AdminPanelSettings, SupervisorAccount, AccountCircle
 } from '@mui/icons-material';
+
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+
+// ✅ IMPORT NOTIFICATION BELL
+import NotificationBell from './NotificationBell';
 
 const DRAWER_WIDTH = 260;
 
@@ -50,90 +54,62 @@ export default function DashboardLayout({ children }) {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const navItems = NAV_ITEMS[user?.role] || [];
   const roleMeta = ROLE_META[user?.role] || {};
 
-  const handleLogout = () => { logout(); navigate('/login'); };
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const DrawerContent = () => (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* Logo */}
-      <Box sx={{ p: 3, pb: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Box sx={{
-            p: 1, borderRadius: 2,
-            background: 'rgba(255,255,255,0.15)',
-            display: 'flex',
-          }}>
-            <School sx={{ color: '#fff', fontSize: 24 }} />
-          </Box>
-          <Box>
-            <Typography variant="subtitle1" fontWeight={800} color="#fff" lineHeight={1.2}>
-              Admin Dashboard
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.6)' }}>
-              Management System
-            </Typography>
-          </Box>
-        </Box>
+      <Box sx={{ p: 3 }}>
+        <Typography variant="h6" color="#fff" fontWeight={800}>
+          Admin Dashboard
+        </Typography>
       </Box>
 
-      {/* User info */}
+      {/* User Info */}
       <Box sx={{ mx: 2, mb: 2, p: 2, borderRadius: 2, background: 'rgba(255,255,255,0.1)' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Avatar sx={{ bgcolor: roleMeta.color, width: 40, height: 40, fontSize: 16, fontWeight: 700 }}>
-            {user?.name?.charAt(0).toUpperCase()}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Avatar sx={{ bgcolor: roleMeta.color }}>
+            {user?.name?.charAt(0)}
           </Avatar>
-          <Box sx={{ minWidth: 0 }}>
-            <Typography variant="body2" fontWeight={700} color="#fff" noWrap>
-              {user?.name}
-            </Typography>
-            <Chip
-              size="small"
-              label={roleMeta.label}
-              icon={React.cloneElement(roleMeta.icon, { style: { color: roleMeta.color, fontSize: 14 } })}
-              sx={{
-                height: 20, fontSize: '0.65rem', fontWeight: 700,
-                bgcolor: 'rgba(255,255,255,0.15)', color: '#fff',
-                '& .MuiChip-icon': { ml: '4px' },
-              }}
-            />
+          <Box>
+            <Typography color="#fff">{user?.name}</Typography>
+            <Chip label={roleMeta.label} size="small" />
           </Box>
         </Box>
       </Box>
 
-      <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)', mx: 2, mb: 1 }} />
+      <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
 
-      {/* Nav */}
-      <List sx={{ flex: 1, px: 1 }}>
+      {/* Nav Items */}
+      <List sx={{ flex: 1 }}>
         {navItems.map(item => {
           const active = location.pathname === item.path;
+
           return (
-            <ListItem key={item.label} disablePadding sx={{ mb: 0.5 }}>
+            <ListItem key={item.label} disablePadding>
               <ListItemButton
-                onClick={() => { navigate(item.path); setMobileOpen(false); }}
+                onClick={() => {
+                  navigate(item.path);
+                  setMobileOpen(false);
+                }}
                 sx={{
-                  borderRadius: 2,
                   bgcolor: active ? 'rgba(255,255,255,0.2)' : 'transparent',
-                  '&:hover': { bgcolor: 'rgba(255,255,255,0.12)' },
-                  py: 1,
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 36, color: active ? '#fff' : 'rgba(255,255,255,0.65)' }}>
+                <ListItemIcon sx={{ color: '#fff' }}>
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText
-                  primary={item.label}
-                  primaryTypographyProps={{
-                    fontSize: '0.875rem',
-                    fontWeight: active ? 700 : 500,
-                    color: active ? '#fff' : 'rgba(255,255,255,0.75)',
-                  }}
-                />
-                {active && <Box sx={{ width: 4, height: 24, borderRadius: 2, bgcolor: '#fff' }} />}
+                <ListItemText primary={item.label} sx={{ color: '#fff' }} />
               </ListItemButton>
             </ListItem>
           );
@@ -142,82 +118,81 @@ export default function DashboardLayout({ children }) {
 
       {/* Logout */}
       <Box sx={{ p: 2 }}>
-        <ListItemButton
-          onClick={handleLogout}
-          sx={{
-            borderRadius: 2, bgcolor: 'rgba(239,83,80,0.15)',
-            '&:hover': { bgcolor: 'rgba(239,83,80,0.25)' },
-          }}
-        >
-          <ListItemIcon sx={{ minWidth: 36 }}>
-            <Logout sx={{ color: '#ef9a9a', fontSize: 20 }} />
+        <ListItemButton onClick={handleLogout}>
+          <ListItemIcon>
+            <Logout sx={{ color: '#fff' }} />
           </ListItemIcon>
-          <ListItemText primary="Logout" primaryTypographyProps={{ fontSize: '0.875rem', color: '#ef9a9a', fontWeight: 600 }} />
+          <ListItemText primary="Logout" sx={{ color: '#fff' }} />
         </ListItemButton>
       </Box>
     </Box>
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box sx={{ display: 'flex' }}>
       {/* Desktop Drawer */}
       {!isMobile && (
-        <Drawer variant="permanent" sx={{
-          width: DRAWER_WIDTH, flexShrink: 0,
-          '& .MuiDrawer-paper': { width: DRAWER_WIDTH, boxSizing: 'border-box', border: 'none' },
-        }}>
+        <Drawer
+          variant="permanent"
+          sx={{
+            width: DRAWER_WIDTH,
+            '& .MuiDrawer-paper': {
+              width: DRAWER_WIDTH,
+              background: '#1e293b',
+              color: '#fff',
+            },
+          }}
+        >
           <DrawerContent />
         </Drawer>
       )}
 
       {/* Mobile Drawer */}
       <Drawer
-        variant="temporary" open={mobileOpen} onClose={() => setMobileOpen(false)}
-        sx={{ display: { xs: 'block', md: 'none' }, '& .MuiDrawer-paper': { width: DRAWER_WIDTH } }}
+        variant="temporary"
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
       >
         <DrawerContent />
       </Drawer>
 
-      {/* Main content */}
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      {/* Main */}
+      <Box sx={{ flex: 1 }}>
         {/* AppBar */}
-        <AppBar position="sticky" elevation={0} sx={{
-          bgcolor: 'background.paper', borderBottom: '1px solid',
-          borderColor: 'divider', color: 'text.primary',
-        }}>
+        <AppBar position="static" sx={{ bgcolor: '#fff', color: '#000' }}>
           <Toolbar>
             {isMobile && (
-              <IconButton edge="start" onClick={() => setMobileOpen(true)} sx={{ mr: 1 }}>
+              <IconButton onClick={() => setMobileOpen(true)}>
                 <MenuIcon />
               </IconButton>
             )}
-            <Typography variant="h6" fontWeight={700} sx={{ flex: 1, color: 'primary.dark' }}>
+
+            <Typography sx={{ flex: 1, fontWeight: 700 }}>
               {navItems.find(n => n.path === location.pathname)?.label || 'Dashboard'}
             </Typography>
-            <Tooltip title="Notifications">
-              <IconButton>
-                <Badge badgeContent={3} color="error">
-                  <NotificationsNone />
-                </Badge>
-              </IconButton>
-            </Tooltip>
-            <IconButton onClick={e => setAnchorEl(e.currentTarget)} sx={{ ml: 1 }}>
-              <Avatar sx={{ bgcolor: roleMeta.color, width: 36, height: 36, fontSize: 14, fontWeight: 700 }}>
-                {user?.name?.charAt(0).toUpperCase()}
+
+            {/* ✅ NOTIFICATION BELL */}
+            <NotificationBell />
+
+            {/* Profile */}
+            <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+              <Avatar sx={{ bgcolor: roleMeta.color }}>
+                {user?.name?.charAt(0)}
               </Avatar>
             </IconButton>
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)}
+            >
               <MenuItem disabled>
-                <Box>
-                  <Typography variant="body2" fontWeight={700}>{user?.name}</Typography>
-                  <Typography variant="caption" color="text.secondary">{user?.email}</Typography>
-                </Box>
+                {user?.name}
               </MenuItem>
-              <Divider />
-              <MenuItem onClick={() => { setAnchorEl(null); navigate(`/${user?.role}/profile`); }}>
+              <MenuItem onClick={() => navigate(`/${user?.role}/profile`)}>
                 <Person fontSize="small" sx={{ mr: 1 }} /> Profile
               </MenuItem>
-              <MenuItem onClick={handleLogout} sx={{ color: 'error.main' }}>
+              <MenuItem onClick={handleLogout}>
                 <Logout fontSize="small" sx={{ mr: 1 }} /> Logout
               </MenuItem>
             </Menu>
@@ -225,7 +200,7 @@ export default function DashboardLayout({ children }) {
         </AppBar>
 
         {/* Page Content */}
-        <Box sx={{ flex: 1, p: { xs: 2, md: 3 }, overflow: 'auto' }}>
+        <Box sx={{ p: 3 }}>
           {children}
         </Box>
       </Box>
